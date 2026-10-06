@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>بابک باقری | سایت شخصی</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: white;
+      background:
+        radial-gradient(circle at top right, #4f46e5, transparent 35%),
+        radial-gradient(circle at bottom left, #0891b2, transparent 30%),
+        #080b18;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 18px 8%;
+      background: rgba(8, 11, 24, 0.75);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #818cf8;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      transition: .3s;
+    }
+
+    nav a:hover {
+      color: #818cf8;
+    }
+
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .profile {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 55px;
+      font-weight: bold;
+
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      box-shadow: 0 0 50px rgba(99,102,241,.5);
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 8vw, 75px);
+      margin-bottom: 15px;
+    }
+
+    .hero h1 span {
+      color: #818cf8;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      font-size: 20px;
+      line-height: 2;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 30px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: .3s;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(99,102,241,.35);
+    }
+
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 80px 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 35px;
+      margin-bottom: 45px;
+    }
+
+    .section-title span {
+      color: #818cf8;
+    }
+
+    .about {
+      text-align: center;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 25px;
+      padding: 45px;
+      line-height: 2.2;
+      color: #cbd5e1;
+      font-size: 17px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      padding: 35px 25px;
+      text-align: center;
+      border-radius: 25px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      transition: .3s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: #6366f1;
+      background: rgba(99,102,241,.12);
+    }
+
+    .card-icon {
+      font-size: 45px;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .card p {
+      color: #94a3b8;
+      line-height: 1.8;
+    }
+
+    .contact {
+      text-align: center;
+    }
+
+    .contact-box {
+      padding: 40px;
+      border-radius: 25px;
+      background: linear-gradient(
+        135deg,
+        rgba(99,102,241,.15),
+        rgba(6,182,212,.1)
+      );
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    @media (max-width: 700px) {
+
+      nav ul {
+        display: none;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .about {
+        padding: 25px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- منوی سایت -->
+  <header>
+    <nav>
+
+      <div class="logo">
+        بابک باقری
+      </div>
+
+      <ul>
+        <li><a href="#home">خانه</a></li>
+        <li><a href="#about">درباره من</a></li>
+        <li><a href="#skills">مهارت‌ها</a></li>
+        <li><a href="#contact">ارتباط</a></li>
+      </ul>
+
+    </nav>
+  </header>
+
+
+  <!-- صفحه اصلی -->
+  <main id="home">
+
+    <div class="hero">
+
+      <div class="hero-content">
+
+        <div class="profile">
+          ب
+        </div>
+
+        <h1>
+          سلام، من <span>بابک باقری</span> هستم 👋
+        </h1>
+
+        <p>
+          به سایت شخصی من خوش آمدید.
+          اینجا جایی برای معرفی من، فعالیت‌ها و پروژه‌های من است.
+        </p>
+
+        <a href="#about" class="btn">
+          بیشتر درباره من
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- درباره من -->
+    <section id="about">
+
+      <h2 class="section-title">
+        درباره <span>من</span>
+      </h2>
+
+      <div class="about">
+
+        <p>
+          سلام! من بابک باقری هستم.
+          به تکنولوژی، طراحی سایت و برنامه‌نویسی علاقه دارم
+          و از ساختن پروژه‌های جدید و خلاقانه لذت می‌برم.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- مهارت‌ها -->
+    <section id="skills">
+
+      <h2 class="section-title">
+        <span>مهارت‌های</span> من
+      </h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <h3>برنامه‌نویسی</h3>
+          <p>
+            ساخت برنامه‌ها و پروژه‌های کاربردی
+            با تکنولوژی‌های مختلف.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3>طراحی سایت</h3>
+          <p>
+            طراحی صفحات مدرن، زیبا و واکنش‌گرا
+            برای موبایل و کامپیوتر.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h3>ایده‌های خلاقانه</h3>
+          <p>
+            تبدیل ایده‌های جدید به پروژه‌های
+            جذاب و قابل استفاده.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ارتباط -->
+    <section id="contact">
+
+      <h2 class="section-title">
+        ارتباط با <span>من</span>
+      </h2>
+
+      <div class="contact-box">
+
+        <p style="margin-bottom:25px;color:#cbd5e1;">
+          برای ارتباط با من می‌توانید از راه‌های ارتباطی
+          موردنظر خود استفاده کنید.
+        </p>
+
+        <button class="btn" id="helloButton">
+          👋 سلام بابک!
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- فوتر -->
+  <footer>
+
+    © 2026 بابک باقری
+    <br>
+    ساخته شده با ❤️ و HTML
+
+  </footer>
+
+
+  <script>
+
+    const button = document.getElementById("helloButton");
+
+    button.addEventListener("click", function() {
+
+      button.textContent = "🔥 خوش اومدی!";
+
+      setTimeout(function() {
+        button.textContent = "👋 سلام بابک!";
+      }, 2000);
+
+    });
+
+  </script>
+
+</body>
+</html>
