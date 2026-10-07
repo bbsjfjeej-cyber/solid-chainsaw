@@ -4,7 +4,617 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اولین سایت من</title>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>بابک ❤️ مهرناز</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Tahoma, Arial, sans-serif;
+    background:
+      radial-gradient(circle at top,#ffb6c9 0%,transparent 35%),
+      linear-gradient(135deg,#16001f,#33052f,#12001a);
+    color:white;
+    overflow-x:hidden;
+}
+
+/* قلب های شناور */
+
+.hearts{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+.heart{
+    position:absolute;
+    bottom:-50px;
+    animation:floatUp linear infinite;
+    opacity:.7;
+    font-size:25px;
+}
+
+@keyframes floatUp{
+    0%{
+        transform:translateY(0) rotate(0);
+        opacity:0;
+    }
+    20%{
+        opacity:.8;
+    }
+    100%{
+        transform:translateY(-110vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* هدر */
+
+header{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:30px 20px;
+    position:relative;
+    z-index:1;
+}
+
+.hero{
+    width:100%;
+    max-width:850px;
+    padding:45px 25px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:35px;
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 70px rgba(0,0,0,.4);
+}
+
+.badge{
+    display:inline-block;
+    padding:9px 18px;
+    border-radius:50px;
+    background:rgba(255,255,255,.12);
+    margin-bottom:25px;
+}
+
+h1{
+    font-size:clamp(45px,10vw,90px);
+    margin-bottom:15px;
+    text-shadow:0 0 30px rgba(255,100,160,.7);
+}
+
+.hero p{
+    font-size:20px;
+    line-height:2;
+    color:#ffe9f1;
+}
+
+.main-heart{
+    font-size:70px;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    50%{
+        transform:scale(1.2);
+    }
+}
+
+.buttons{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    text-decoration:none;
+    color:white;
+    border:none;
+    cursor:pointer;
+    padding:14px 24px;
+    border-radius:50px;
+    font-size:16px;
+    background:linear-gradient(135deg,#ff477e,#b5179e);
+    box-shadow:0 8px 25px rgba(255,50,130,.3);
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-4px) scale(1.03);
+}
+
+/* بخش ها */
+
+section{
+    position:relative;
+    z-index:1;
+    padding:80px 20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.title h2{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.title p{
+    color:#eacbd7;
+}
+
+/* کارت */
+
+.card{
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:28px;
+    padding:30px;
+    backdrop-filter:blur(15px);
+    box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+/* شمارنده */
+
+.counter{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.time{
+    text-align:center;
+    padding:25px 10px;
+    border-radius:20px;
+    background:rgba(255,255,255,.08);
+}
+
+.time strong{
+    display:block;
+    font-size:35px;
+}
+
+.time span{
+    color:#e8c7d2;
+}
+
+/* نامه */
+
+.letter{
+    line-height:2.3;
+    font-size:18px;
+    text-align:center;
+}
+
+.letter .signature{
+    margin-top:25px;
+    font-size:23px;
+}
+
+/* گالری */
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.photo{
+    height:220px;
+    border-radius:22px;
+    background:linear-gradient(135deg,#ff477e,#7b2cbf);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:15px;
+    overflow:hidden;
+}
+
+.photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ویدیو */
+
+.video-box{
+    text-align:center;
+}
+
+video{
+    width:100%;
+    max-height:500px;
+    border-radius:25px;
+    background:#000;
+}
+
+/* دکمه موسیقی */
+
+.music{
+    position:fixed;
+    left:18px;
+    bottom:18px;
+    z-index:10;
+    width:55px;
+    height:55px;
+    border:none;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ff477e,#7b2cbf);
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(0,0,0,.4);
+}
+
+/* فوتر */
+
+footer{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:40px 20px;
+    color:#dcbac7;
+}
+
+/* موبایل */
+
+@media(max-width:700px){
+
+    .hero{
+        padding:35px 18px;
+    }
+
+    .hero p{
+        font-size:16px;
+    }
+
+    .counter{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .gallery{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .photo{
+        height:170px;
+    }
+
+    section{
+        padding:60px 15px;
+    }
+
+    .title h2{
+        font-size:28px;
+    }
+}
+
+@media(max-width:430px){
+
+    .gallery{
+        grid-template-columns:1fr;
+    }
+
+    .photo{
+        height:220px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- قلب های متحرک -->
+<div class="hearts">
+    <div class="heart" style="left:5%;animation-duration:9s;">❤️</div>
+    <div class="heart" style="left:18%;animation-duration:12s;">💗</div>
+    <div class="heart" style="left:32%;animation-duration:8s;">💕</div>
+    <div class="heart" style="left:47%;animation-duration:11s;">💖</div>
+    <div class="heart" style="left:61%;animation-duration:9s;">💞</div>
+    <div class="heart" style="left:76%;animation-duration:13s;">❤️</div>
+    <div class="heart" style="left:90%;animation-duration:10s;">💘</div>
+</div>
+
+
+<header>
+
+<div class="hero">
+
+    <div class="badge">یک داستان دو نفره ✨</div>
+
+    <div class="main-heart">❤️</div>
+
+    <h1>بابک و مهرناز</h1>
+
+    <p>
+        بعضی آدم‌ها فقط وارد زندگی نمی‌شوند...
+        <br>
+        می‌آیند تا خودِ زندگی شوند.
+    </p>
+
+    <div class="buttons">
+        <a class="btn" href="#story">داستان ما 💌</a>
+        <a class="btn" href="#gallery">خاطرات 📸</a>
+        <a class="btn" href="#video">ویدیو 🎬</a>
+    </div>
+
+</div>
+
+</header>
+
+
+<!-- شمارنده -->
+
+<section id="story">
+
+<div class="container">
+
+<div class="title">
+    <h2>⏳ زمان با هم بودن</h2>
+    <p>هر لحظه، یک خاطره‌ی تازه</p>
+</div>
+
+<div class="card">
+
+<div class="counter">
+
+    <div class="time">
+        <strong id="days">0</strong>
+        <span>روز</span>
+    </div>
+
+    <div class="time">
+        <strong id="hours">0</strong>
+        <span>ساعت</span>
+    </div>
+
+    <div class="time">
+        <strong id="minutes">0</strong>
+        <span>دقیقه</span>
+    </div>
+
+    <div class="time">
+        <strong id="seconds">0</strong>
+        <span>ثانیه</span>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- نامه -->
+
+<section>
+
+<div class="container">
+
+<div class="title">
+    <h2>💌 برای مهرناز</h2>
+    <p>چند کلمه از ته دل</p>
+</div>
+
+<div class="card letter">
+
+    <p>
+        مهرناز جان ❤️
+        <br><br>
+        شاید نتوانم همیشه تمام احساسم را با کلمات توضیح بدهم،
+        اما یک چیز را خوب می‌دانم؛
+        حضور بعضی آدم‌ها زندگی را زیباتر می‌کند.
+        <br><br>
+        این صفحه فقط یک سایت نیست،
+        گوشه‌ای کوچک از خاطرات و لحظه‌هایی است
+        که ارزش نگه داشتن دارند.
+    </p>
+
+    <div class="signature">
+        با عشق، بابک ❤️
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- گالری -->
+
+<section id="gallery">
+
+<div class="container">
+
+<div class="title">
+    <h2>📸 گالری خاطرات</h2>
+    <p>اینجا می‌توانی عکس‌های خودتان را قرار بدهی</p>
+</div>
+
+<div class="gallery">
+
+    <div class="photo">
+        <span>📷<br>عکس خاطره‌انگیز اول</span>
+    </div>
+
+    <div class="photo">
+        <span>💕<br>یک خاطره‌ی قشنگ</span>
+    </div>
+
+    <div class="photo">
+        <span>🌹<br>یک لحظه‌ی خاص</span>
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ویدیو -->
+
+<section id="video">
+
+<div class="container">
+
+<div class="title">
+    <h2>🎬 خاطرات ویدیویی</h2>
+    <p>ویدیوی خاطره‌انگیز شما</p>
+</div>
+
+<div class="card video-box">
+
+    <video controls>
+        <source src="video.mp4" type="video/mp4">
+        مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+    </video>
+
+    <br><br>
+
+    <p>
+        برای قرار دادن ویدیوی خودتان،
+        فایل را با نام <b>video.mp4</b>
+        کنار همین فایل HTML آپلود کنید.
+    </p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- پایان -->
+
+<footer>
+
+    <div style="font-size:35px;">❤️</div>
+
+    <p>
+        بابک و مهرناز
+    </p>
+
+    <p>
+        ساخته شده با عشق ✨
+    </p>
+
+</footer>
+
+
+<!-- موسیقی -->
+<button class="music" onclick="toggleMusic()">🎵</button>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+
+/* تاریخ شروع را اینجا تغییر بده */
+
+const startDate = new Date("2026-01-01T00:00:00");
+
+
+function updateCounter(){
+
+    const now = new Date();
+
+    let diff = now - startDate;
+
+    if(diff < 0) diff = 0;
+
+    const days = Math.floor(diff / (1000*60*60*24));
+
+    const hours = Math.floor(
+        diff / (1000*60*60)
+    ) % 24;
+
+    const minutes = Math.floor(
+        diff / (1000*60)
+    ) % 60;
+
+    const seconds = Math.floor(
+        diff / 1000
+    ) % 60;
+
+
+    document.getElementById("days").textContent = days;
+
+    document.getElementById("hours").textContent = hours;
+
+    document.getElementById("minutes").textContent = minutes;
+
+    document.getElementById("seconds").textContent = seconds;
+}
+
+
+setInterval(updateCounter,1000);
+
+updateCounter();
+
+
+/* موسیقی */
+
+let playing = false;
+
+function toggleMusic(){
+
+    const music = document.getElementById("music");
+
+    if(playing){
+
+        music.pause();
+
+    }else{
+
+        music.play().catch(()=>{
+            alert("برای پخش موسیقی یک بار روی صفحه ضربه بزن.");
+        });
+
+    }
+
+    playing = !playing;
+}
+
+</script>
+
+</body>
+</html>
     <style>
         body {
             margin: 0;
