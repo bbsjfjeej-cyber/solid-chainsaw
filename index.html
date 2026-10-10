@@ -1,399 +1,482 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گالری عکس من</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Tahoma, sans-serif;
+    background: #0f0f13;
+    color: #fff;
+    min-height: 100vh;
+  }
 
-  <title>بابک باقری | سایت شخصی</title>
+  header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 1.8rem; margin-bottom: 15px; }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Tahoma, Arial, sans-serif;
-    }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .toolbar input[type="text"] {
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    width: 220px;
+    background: rgba(255,255,255,0.9);
+  }
+  .toolbar button, .toolbar label {
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+  }
+  .toolbar button:hover, .toolbar label:hover {
+    background: rgba(255,255,255,0.35);
+    transform: translateY(-2px);
+  }
+  #uploadInput { display: none; }
 
-    body {
-      min-height: 100vh;
-      color: white;
-      background:
-        radial-gradient(circle at top right, #4f46e5, transparent 35%),
-        radial-gradient(circle at bottom left, #0891b2, transparent 30%),
-        #080b18;
-    }
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 20px;
+  }
+  .cat-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.3s;
+  }
+  .cat-btn.active, .cat-btn:hover {
+    background: #667eea;
+    color: #fff;
+    border-color: #667eea;
+  }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 18px 8%;
-      background: rgba(8, 11, 24, 0.75);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(255,255,255,.1);
-    }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+  .photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #1a1a22;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+  }
+  .photo-card:hover { transform: translateY(-5px); }
+  .photo-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+  }
+  .photo-card:hover img { transform: scale(1.08); }
 
-    nav {
-      max-width: 1100px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  .photo-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    padding: 30px 12px 12px;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+  .photo-card:hover .photo-overlay { transform: translateY(0); }
+  .photo-overlay p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .photo-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .photo-actions button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .photo-actions button:hover { background: #667eea; }
 
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #818cf8;
-    }
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 10px;
+    box-shadow: 0 0 40px rgba(255,255,255,0.2);
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 20px; right: 25px;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .lightbox .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    width: 55px; height: 55px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .lightbox .nav:hover { background: #667eea; }
+  .lightbox .prev { left: 20px; }
+  .lightbox .next { right: 20px; }
 
-    nav ul {
-      display: flex;
-      gap: 25px;
-      list-style: none;
-    }
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    grid-column: 1 / -1;
+  }
+  .empty h3 { font-size: 1.5rem; margin-bottom: 10px; }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      transition: .3s;
-    }
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #667eea;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    transition: transform 0.4s;
+    z-index: 2000;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
-    nav a:hover {
-      color: #818cf8;
-    }
+  .loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    .hero {
-      min-height: 85vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .hero-content {
-      max-width: 800px;
-    }
-
-    .profile {
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 25px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 55px;
-      font-weight: bold;
-
-      background: linear-gradient(135deg, #6366f1, #06b6d4);
-      box-shadow: 0 0 50px rgba(99,102,241,.5);
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 8vw, 75px);
-      margin-bottom: 15px;
-    }
-
-    .hero h1 span {
-      color: #818cf8;
-    }
-
-    .hero p {
-      color: #cbd5e1;
-      font-size: 20px;
-      line-height: 2;
-      margin-bottom: 30px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 30px;
-      border-radius: 15px;
-      background: linear-gradient(135deg, #6366f1, #06b6d4);
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: .3s;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(99,102,241,.35);
-    }
-
-    section {
-      max-width: 1100px;
-      margin: auto;
-      padding: 80px 20px;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 35px;
-      margin-bottom: 45px;
-    }
-
-    .section-title span {
-      color: #818cf8;
-    }
-
-    .about {
-      text-align: center;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 25px;
-      padding: 45px;
-      line-height: 2.2;
-      color: #cbd5e1;
-      font-size: 17px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .card {
-      padding: 35px 25px;
-      text-align: center;
-      border-radius: 25px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      transition: .3s;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      border-color: #6366f1;
-      background: rgba(99,102,241,.12);
-    }
-
-    .card-icon {
-      font-size: 45px;
-      margin-bottom: 20px;
-    }
-
-    .card h3 {
-      margin-bottom: 12px;
-      font-size: 22px;
-    }
-
-    .card p {
-      color: #94a3b8;
-      line-height: 1.8;
-    }
-
-    .contact {
-      text-align: center;
-    }
-
-    .contact-box {
-      padding: 40px;
-      border-radius: 25px;
-      background: linear-gradient(
-        135deg,
-        rgba(99,102,241,.15),
-        rgba(6,182,212,.1)
-      );
-      border: 1px solid rgba(255,255,255,.1);
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: #64748b;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-
-    @media (max-width: 700px) {
-
-      nav ul {
-        display: none;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .about {
-        padding: 25px;
-      }
-
-      .hero p {
-        font-size: 16px;
-      }
-    }
-  </style>
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3rem; }
+    .toolbar input[type="text"] { width: 100%; }
+    .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .photo-card img { height: 150px; }
+    .lightbox .nav { width: 45px; height: 45px; font-size: 1.8rem; }
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- منوی سایت -->
-  <header>
-    <nav>
+<header>
+  <h1>📸 گالری عکس من</h1>
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="🔍 جستجو در عنوان‌ها...">
+    <label for="uploadInput">➕ افزودن عکس</label>
+    <input type="file" id="uploadInput" accept="image/*" multiple>
+    <button id="syncBtn">🔄 همگام‌سازی</button>
+  </div>
+</header>
 
-      <div class="logo">
-        بابک باقری
-      </div>
+<div class="categories" id="categories">
+  <button class="cat-btn active" data-cat="all">همه</button>
+  <button class="cat-btn" data-cat="طبیعت">🌿 طبیعت</button>
+  <button class="cat-btn" data-cat="سفر">✈️ سفر</button>
+  <button class="cat-btn" data-cat="خانواده">👨‍👩‍👧 خانواده</button>
+  <button class="cat-btn" data-cat="دیگر">📁 دیگر</button>
+</div>
 
-      <ul>
-        <li><a href="#home">خانه</a></li>
-        <li><a href="#about">درباره من</a></li>
-        <li><a href="#skills">مهارت‌ها</a></li>
-        <li><a href="#contact">ارتباط</a></li>
-      </ul>
+<div class="gallery" id="gallery">
+  <div class="empty">
+    <h3>در حال بارگذاری...</h3>
+  </div>
+</div>
 
-    </nav>
-  </header>
+<div class="lightbox" id="lightbox">
+  <button class="close" id="closeLb">×</button>
+  <button class="nav prev" id="prevBtn">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="nav next" id="nextBtn">›</button>
+</div>
 
+<div class="toast" id="toast"></div>
 
-  <!-- صفحه اصلی -->
-  <main id="home">
+<script>
+// ============================================
+// تنظیمات Cloudinary
+// ============================================
+const CLOUD_NAME = 'cytp3ywj';
+const UPLOAD_PRESET = 'Babakupload';
+const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-    <div class="hero">
+// ============================================
+// متغیرها
+// ============================================
+let photos = [];
+let currentCat = 'all';
+let searchTerm = '';
+let lbIndex = 0;
 
-      <div class="hero-content">
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const toast = document.getElementById('toast');
 
-        <div class="profile">
-          ب
+// ============================================
+// نوتیفیکیشن
+// ============================================
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ============================================
+// بارگذاری لیست عکس‌ها از localStorage
+// ============================================
+function loadPhotos() {
+  try {
+    photos = JSON.parse(localStorage.getItem('myPhotos_v2') || '[]');
+  } catch (e) {
+    photos = [];
+  }
+  render();
+}
+
+// ============================================
+// رندر گالری
+// ============================================
+function render() {
+  let filtered = photos.filter(p => {
+    const matchCat = currentCat === 'all' || p.cat === currentCat;
+    const matchSearch = (p.title || '').toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    gallery.innerHTML = `
+      <div class="empty">
+        <h3>عکسی پیدا نشد</h3>
+        <p>عکس جدید اضافه کن یا فیلتر رو تغییر بده</p>
+      </div>`;
+    return;
+  }
+
+  gallery.innerHTML = '';
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.innerHTML = `
+      <img src="${p.url}" alt="${p.title}" loading="lazy">
+      <div class="photo-overlay">
+        <p>${p.title || 'بدون عنوان'}</p>
+        <div class="photo-actions">
+          <button onclick="event.stopPropagation(); editPhoto('${p.id}')">✏️ ویرایش</button>
+          <button onclick="event.stopPropagation(); deletePhoto('${p.id}')">🗑️ حذف</button>
         </div>
-
-        <h1>
-          سلام، من <span>بابک باقری</span> هستم 👋
-        </h1>
-
-        <p>
-          به سایت شخصی من خوش آمدید.
-          اینجا جایی برای معرفی من، فعالیت‌ها و پروژه‌های من است.
-        </p>
-
-        <a href="#about" class="btn">
-          بیشتر درباره من
-        </a>
-
       </div>
+    `;
+    card.onclick = () => openLightbox(p.id);
+    gallery.appendChild(card);
+  });
+}
 
-    </div>
+// ============================================
+// آپلود عکس به Cloudinary
+// ============================================
+document.getElementById('uploadInput').addEventListener('change', async e => {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
 
+  for (const file of files) {
+    try {
+      showToast('⏳ در حال آپلود...');
 
-    <!-- درباره من -->
-    <section id="about">
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
 
-      <h2 class="section-title">
-        درباره <span>من</span>
-      </h2>
+      const res = await fetch(CLOUDINARY_URL, {
+        method: 'POST',
+        body: formData
+      });
 
-      <div class="about">
+      if (!res.ok) throw new Error('خطا در آپلود');
 
-        <p>
-          سلام! من بابک باقری هستم.
-          به تکنولوژی، طراحی سایت و برنامه‌نویسی علاقه دارم
-          و از ساختن پروژه‌های جدید و خلاقانه لذت می‌برم.
-        </p>
+      const data = await res.json();
 
-      </div>
+      const title = prompt('عنوان عکس را وارد کن:', file.name.replace(/\.[^/.]+$/, '')) || file.name;
+      const cat = prompt('دسته‌بندی (طبیعت/سفر/خانواده/دیگر):', 'دیگر') || 'دیگر';
 
-    </section>
+      photos.push({
+        id: data.public_id,
+        url: data.secure_url,
+        public_id: data.public_id,
+        title,
+        cat,
+        created: new Date().toISOString()
+      });
 
+      save();
+      render();
+      showToast('✅ عکس با موفقیت ذخیره شد');
+    } catch (err) {
+      console.error(err);
+      showToast('❌ خطا در آپلود عکس');
+    }
+  }
+  e.target.value = '';
+});
 
-    <!-- مهارت‌ها -->
-    <section id="skills">
+// ============================================
+// حذف عکس
+// ============================================
+function deletePhoto(id) {
+  if (!confirm('مطمئنی می‌خوای حذف کنی؟ (عکس از گالری پاک می‌شه ولی از Cloudinary نه)')) return;
+  photos = photos.filter(p => String(p.id) !== String(id));
+  save(); render(); showToast('🗑️ عکس حذف شد');
+}
 
-      <h2 class="section-title">
-        <span>مهارت‌های</span> من
-      </h2>
+// ============================================
+// ویرایش عنوان و دسته
+// ============================================
+function editPhoto(id) {
+  const p = photos.find(x => String(x.id) === String(id));
+  if (!p) return;
+  const newTitle = prompt('عنوان جدید:', p.title);
+  if (newTitle === null) return;
+  const newCat = prompt('دسته‌بندی جدید:', p.cat);
+  p.title = newTitle || p.title;
+  p.cat = newCat || p.cat;
+  save(); render(); showToast('✏️ ویرایش شد');
+}
 
-      <div class="cards">
+// ============================================
+// جستجو
+// ============================================
+document.getElementById('searchBox').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  render();
+});
 
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <h3>برنامه‌نویسی</h3>
-          <p>
-            ساخت برنامه‌ها و پروژه‌های کاربردی
-            با تکنولوژی‌های مختلف.
-          </p>
-        </div>
+// ============================================
+// دسته‌بندی
+// ============================================
+document.getElementById('categories').addEventListener('click', e => {
+  if (!e.target.classList.contains('cat-btn')) return;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  currentCat = e.target.dataset.cat;
+  render();
+});
 
-        <div class="card">
-          <div class="card-icon">🌐</div>
-          <h3>طراحی سایت</h3>
-          <p>
-            طراحی صفحات مدرن، زیبا و واکنش‌گرا
-            برای موبایل و کامپیوتر.
-          </p>
-        </div>
+// ============================================
+// همگام‌سازی (دریافت عکس‌های Cloudinary)
+// ============================================
+document.getElementById('syncBtn').onclick = () => {
+  showToast('ℹ️ برای دریافت لیست عکس‌ها به پنل Cloudinary برو');
+};
 
-        <div class="card">
-          <div class="card-icon">🚀</div>
-          <h3>ایده‌های خلاقانه</h3>
-          <p>
-            تبدیل ایده‌های جدید به پروژه‌های
-            جذاب و قابل استفاده.
-          </p>
-        </div>
+// ============================================
+// لایت‌باکس
+// ============================================
+function openLightbox(id) {
+  lbIndex = photos.findIndex(p => String(p.id) === String(id));
+  if (lbIndex < 0) return;
+  lbImg.src = photos[lbIndex].url;
+  lightbox.classList.add('active');
+}
+function closeLightbox() { lightbox.classList.remove('active'); }
+function navLightbox(dir) {
+  lbIndex = (lbIndex + dir + photos.length) % photos.length;
+  lbImg.src = photos[lbIndex].url;
+}
+document.getElementById('closeLb').onclick = closeLightbox;
+document.getElementById('prevBtn').onclick = () => navLightbox(-1);
+document.getElementById('nextBtn').onclick = () => navLightbox(1);
+lightbox.onclick = e => { if (e.target === lightbox) closeLightbox(); };
 
-      </div>
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') navLightbox(-1);
+  if (e.key === 'ArrowLeft') navLightbox(1);
+});
 
-    </section>
+// ============================================
+// ذخیره در localStorage
+// ============================================
+function save() {
+  try {
+    localStorage.setItem('myPhotos_v2', JSON.stringify(photos));
+  } catch (err) {
+    showToast('⚠️ حافظه پر شده');
+  }
+}
 
-
-    <!-- ارتباط -->
-    <section id="contact">
-
-      <h2 class="section-title">
-        ارتباط با <span>من</span>
-      </h2>
-
-      <div class="contact-box">
-
-        <p style="margin-bottom:25px;color:#cbd5e1;">
-          برای ارتباط با من می‌توانید از راه‌های ارتباطی
-          موردنظر خود استفاده کنید.
-        </p>
-
-        <button class="btn" id="helloButton">
-          👋 سلام بابک!
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- فوتر -->
-  <footer>
-
-    © 2026 بابک باقری
-    <br>
-    ساخته شده با ❤️ و HTML
-
-  </footer>
-
-
-  <script>
-
-    const button = document.getElementById("helloButton");
-
-    button.addEventListener("click", function() {
-
-      button.textContent = "🔥 خوش اومدی!";
-
-      setTimeout(function() {
-        button.textContent = "👋 سلام بابک!";
-      }, 2000);
-
-    });
-
-  </script>
-
+// ============================================
+// شروع
+// ============================================
+loadPhotos();
+</script>
 </body>
 </html>
