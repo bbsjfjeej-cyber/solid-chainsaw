@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گالری عکس من</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Tahoma, sans-serif;
+    background: #0f0f13;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* ===== هدر ===== */
+  header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 1.8rem; margin-bottom: 15px; }
+
+  /* ===== نوار ابزار ===== */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .toolbar input[type="text"] {
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    width: 220px;
+    background: rgba(255,255,255,0.9);
+  }
+  .toolbar button, .toolbar label {
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+  }
+  .toolbar button:hover, .toolbar label:hover {
+    background: rgba(255,255,255,0.35);
+    transform: translateY(-2px);
+  }
+  #uploadInput { display: none; }
+
+  /* ===== دسته‌بندی ===== */
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 20px;
+  }
+  .cat-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.3s;
+  }
+  .cat-btn.active, .cat-btn:hover {
+    background: #667eea;
+    color: #fff;
+    border-color: #667eea;
+  }
+
+  /* ===== گالری ===== */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+  .photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #1a1a22;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+  }
+  .photo-card:hover { transform: translateY(-5px); }
+  .photo-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+  }
+  .photo-card:hover img { transform: scale(1.08); }
+
+  .photo-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    padding: 30px 12px 12px;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+  .photo-card:hover .photo-overlay { transform: translateY(0); }
+  .photo-overlay p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .photo-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .photo-actions button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .photo-actions button:hover { background: #667eea; }
+
+  /* ===== لایت‌باکس ===== */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 10px;
+    box-shadow: 0 0 40px rgba(255,255,255,0.2);
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 20px; right: 25px;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .lightbox .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    width: 55px; height: 55px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .lightbox .nav:hover { background: #667eea; }
+  .lightbox .prev { left: 20px; }
+  .lightbox .next { right: 20px; }
+
+  /* ===== حالت خالی ===== */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    grid-column: 1 / -1;
+  }
+  .empty h3 { font-size: 1.5rem; margin-bottom: 10px; }
+
+  /* ===== نوتیفیکیشن ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #667eea;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    transition: transform 0.4s;
+    z-index: 2000;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3rem; }
+    .toolbar input[type="text"] { width: 100%; }
+    .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .photo-card img { height: 150px; }
+    .lightbox .nav { width: 45px; height: 45px; font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📸 گالری عکس من</h1>
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="🔍 جستجو در عنوان‌ها...">
+    <label for="uploadInput">➕ افزودن عکس</label>
+    <input type="file" id="uploadInput" accept="image/*" multiple>
+    <button id="clearBtn">🗑️ پاک کردن همه</button>
+  </div>
+</header>
+
+<div class="categories" id="categories">
+  <button class="cat-btn active" data-cat="all">همه</button>
+  <button class="cat-btn" data-cat="طبیعت">🌿 طبیعت</button>
+  <button class="cat-btn" data-cat="سفر">✈️ سفر</button>
+  <button class="cat-btn" data-cat="خانواده">👨‍👩‍👧 خانواده</button>
+  <button class="cat-btn" data-cat="دیگر">📁 دیگر</button>
+</div>
+
+<div class="gallery" id="gallery">
+  <div class="empty">
+    <h3>هنوز عکسی اضافه نکردی</h3>
+    <p>روی دکمه «افزودن عکس» بزن تا شروع کنی</p>
+  </div>
+</div>
+
+<!-- لایت‌باکس -->
+<div class="lightbox" id="lightbox">
+  <button class="close" id="closeLb">×</button>
+  <button class="nav prev" id="prevBtn">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="nav next" id="nextBtn">›</button>
+</div>
+
+<!-- نوتیفیکیشن -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== ذخیره‌سازی =====
+let photos = JSON.parse(localStorage.getItem('myPhotos') || '[]');
+let currentCat = 'all';
+let searchTerm = '';
+let lbIndex = 0;
+
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const toast = document.getElementById('toast');
+
+// ===== نمایش نوتیفیکیشن =====
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== رندر گالری =====
+function render() {
+  let filtered = photos.filter(p => {
+    const matchCat = currentCat === 'all' || p.cat === currentCat;
+    const matchSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    gallery.innerHTML = `
+      <div class="empty">
+        <h3>عکسی پیدا نشد</h3>
+        <p>عکس جدید اضافه کن یا فیلتر رو تغییر بده</p>
+      </div>`;
+    return;
+  }
+
+  gallery.innerHTML = '';
+  filtered.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.innerHTML = `
+      <img src="${p.src}" alt="${p.title}">
+      <div class="photo-overlay">
+        <p>${p.title || 'بدون عنوان'}</p>
+        <div class="photo-actions">
+          <button onclick="event.stopPropagation(); editPhoto('${p.id}')">✏️ ویرایش</button>
+          <button onclick="event.stopPropagation(); deletePhoto('${p.id}')">🗑️ حذف</button>
+        </div>
+      </div>
+    `;
+    card.onclick = () => openLightbox(p.id);
+    gallery.appendChild(card);
+  });
+}
+
+// ===== افزودن عکس =====
+document.getElementById('uploadInput').addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const title = prompt('عنوان عکس را وارد کن:', file.name.replace(/\.[^/.]+$/, '')) || file.name;
+      const cat = prompt('دسته‌بندی (طبیعت/سفر/خانواده/دیگر):', 'دیگر') || 'دیگر';
+      photos.push({
+        id: Date.now() + Math.random(),
+        src: ev.target.result,
+        title,
+        cat
+      });
+      save();
+      render();
+      showToast('✅ عکس اضافه شد');
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+});
+
+// ===== حذف عکس =====
+function deletePhoto(id) {
+  if (!confirm('مطمئنی می‌خوای حذف کنی؟')) return;
+  photos = photos.filter(p => String(p.id) !== String(id));
+  save(); render(); showToast('🗑️ عکس حذف شد');
+}
+
+// ===== ویرایش =====
+function editPhoto(id) {
+  const p = photos.find(x => String(x.id) === String(id));
+  if (!p) return;
+  const newTitle = prompt('عنوان جدید:', p.title);
+  if (newTitle === null) return;
+  const newCat = prompt('دسته‌بندی جدید:', p.cat);
+  p.title = newTitle || p.title;
+  p.cat = newCat || p.cat;
+  save(); render(); showToast('✏️ ویرایش شد');
+}
+
+// ===== پاک کردن همه =====
+document.getElementById('clearBtn').onclick = () => {
+  if (!photos.length) return showToast('گالری خالیه');
+  if (confirm('همه عکس‌ها حذف بشن؟')) {
+    photos = [];
+    save(); render(); showToast('همه عکس‌ها پاک شدند');
+  }
+};
+
+// ===== جستجو =====
+document.getElementById('searchBox').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  render();
+});
+
+// ===== دسته‌بندی =====
+document.getElementById('categories').addEventListener('click', e => {
+  if (!e.target.classList.contains('cat-btn')) return;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  currentCat = e.target.dataset.cat;
+  render();
+});
+
+// ===== لایت‌باکس =====
+function openLightbox(id) {
+  const list = photos;
+  lbIndex = list.findIndex(p => String(p.id) === String(id));
+  if (lbIndex < 0) return;
+  lbImg.src = list[lbIndex].src;
+  lightbox.classList.add('active');
+}
+function closeLightbox() { lightbox.classList.remove('active'); }
+function navLightbox(dir) {
+  lbIndex = (lbIndex + dir + photos.length) % photos.length;
+  lbImg.src = photos[lbIndex].src;
+}
+document.getElementById('closeLb').onclick = closeLightbox;
+document.getElementById('prevBtn').onclick = () => navLightbox(-1);
+document.getElementById('nextBtn').onclick = () => navLightbox(1);
+lightbox.onclick = e => { if (e.target === lightbox) closeLightbox(); };
+
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') navLightbox(-1);
+  if (e.key === 'ArrowLeft') navLightbox(1);
+});
+
+// ===== ذخیره =====
+function save() {
+  try {
+    localStorage.setItem('myPhotos', JSON.stringify(photos));
+  } catch (err) {
+    showToast('⚠️ حافظه پر شده، عکس کمتری ذخیره کن');
+  }
+}
+
+// ===== شروع =====
+render();
+</script>
+</body>
+</html>
